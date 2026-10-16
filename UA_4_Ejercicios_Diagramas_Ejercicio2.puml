@@ -1,0 +1,35 @@
+@startuml
+actor Cliente
+boundary "Pantalla de Reservas" as Pantalla
+control "Sistema GymFit" as Sistema
+database "Base de Datos" as BD
+
+Cliente -> Pantalla : Iniciar sesión
+Pantalla -> Sistema : Validar credenciales
+Sistema -> BD : Comprobar usuario
+BD --> Sistema : Usuario válido
+Sistema --> Pantalla : Acceso concedido
+
+Cliente -> Pantalla : Ver listado de actividades
+Pantalla -> Sistema : Solicitar actividades
+Sistema -> BD : Obtener actividades
+BD --> Sistema : Lista de actividades
+Sistema --> Pantalla : Mostrar actividades
+
+Cliente -> Pantalla : Seleccionar actividad
+Pantalla -> Sistema : Solicitar reserva(actividad)
+
+Sistema -> BD : Comprobar plazas disponibles
+BD --> Sistema : Plazas disponibles
+
+alt Hay plazas disponibles
+    Sistema -> BD : Registrar reserva
+    BD --> Sistema : Reserva registrada
+    Sistema --> Pantalla : Mostrar confirmación
+    Pantalla --> Cliente : Reserva confirmada
+else No hay plazas disponibles
+    Sistema --> Pantalla : Mostrar error
+    Pantalla --> Cliente : No hay plazas disponibles
+end
+
+@enduml
